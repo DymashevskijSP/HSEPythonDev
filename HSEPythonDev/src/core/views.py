@@ -3,7 +3,7 @@ from django.core.exceptions import BadRequest
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from HSEPythonDev.src.core.utils import parse_time
+from HSEPythonDev.src.core.utils import parse_time, check_meeting_times
 from HSEPythonDev.src.core.serializers import HelloWorldTextUpdateSerializer, AddMeetingSerializer
 
 
@@ -37,11 +37,14 @@ class MeetingsViewSet(ValidationViewSet):
         return Response([{"meeting_id": "id1"}, {"meeting_id": "id2"}, {"meeting_id": "id3"}])
 
     def create(self, request):
+        # creates meeting
         data = self.validate(AddMeetingSerializer, request)
-
-        time = parse_time(data['start_time'])
-        return Response({'start_time': time, 'admin': data['admin']['login']})
+        start_time = parse_time(data['start_time'])
+        end_time = parse_time(data['end_time'])
+        check_meeting_times(start_time, end_time)
+        return Response({'start_time': start_time, 'admin': data['admin']['login']})
 
 
     def destroy(self):
+        #removes meeting, no database, so nothing to remove
         pass

@@ -11,8 +11,8 @@ class TestHeloWorld(MyTestCase):
 
     def test_post(self):
         data = {
-            'start_time': '10:11:00 2022.09.27',
-            'end_time': '10:11:00 2022.09.27',
+            'start_time': '10:11:00 2122.09.27',
+            'end_time': '11:11:00 2122.09.27',
             'name': "myfirstmeeting",
             'admin': {'login': 'sergey'}
         }
@@ -20,7 +20,7 @@ class TestHeloWorld(MyTestCase):
         self.assertEqual(response.status_code, 200)
         content = json.loads(response.content)
         self.assertEqual(content['admin'], 'sergey')
-        self.assertEqual(content['start_time'], '2022-09-27T10:11:00')
+        self.assertEqual(content['start_time'], '2122-09-27T10:11:00')
 
     def test_list(self):
         response = self.client.get('/meetings/')
@@ -37,3 +37,22 @@ class TestHeloWorld(MyTestCase):
         }
         response = self.client.post('/meetings/', data=data, format='json')
         self.assertEqual(response.status_code, 400)
+
+    def test_incorrect_time(self):
+        data = {
+            'start_time': '10:11:00 2123.09.27',
+            'end_time': '10:11:00 2123.09.27',
+            'name': "myfirstmeeting",
+            'admin': {'login': 'sergey'}
+        }
+        response = self.client.post('/meetings/', data=data, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.content, b'meeting should begins earlier than ends')
+
+        data.update({
+            'start_time': '10:11:00 2022.09.27',
+            'end_time': '10:15:00 2022.09.27'
+        })
+        response = self.client.post('/meetings/', data=data, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.content, b'meeting can\'t be created in this time')
