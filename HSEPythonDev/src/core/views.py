@@ -1,11 +1,9 @@
-import datetime
 
 from django.core.exceptions import BadRequest
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from HSEPythonDev.src.core.models import Meeting, User
+from HSEPythonDev.src.core.utils import parse_time
 from HSEPythonDev.src.core.serializers import HelloWorldTextUpdateSerializer, AddMeetingSerializer
 
 
@@ -36,17 +34,13 @@ class MeetingsViewSet(ValidationViewSet):
     permission_classes = ()
 
     def list(self, request):
-        meetings = Meeting.objects.all()
-        result = []
-        for meeting in meetings:
-            result.append({'name': meeting.name})
+        return Response([{"meeting_id": "id1"}, {"meeting_id": "id2"}, {"meeting_id": "id3"}])
 
     def create(self, request):
         data = self.validate(AddMeetingSerializer, request)
-        logins = [user['login'] for user in data.get('participants', [])]
-        meeting = Meeting(start_time=datetime.time(), end_time=datetime.time(), name=data.get('name'), users=logins)
-        meeting.save()
-        return Response({'ok': True})
+
+        time = parse_time(data['start_time'])
+        return Response({'start_time': time, 'admin': data['admin']['login']})
 
 
     def destroy(self):

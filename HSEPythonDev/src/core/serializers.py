@@ -12,5 +12,5 @@ class UserSerializer(serializers.Serializer):
 class AddMeetingSerializer(serializers.Serializer):
     start_time = serializers.CharField(required=True)
     end_time = serializers.CharField(required=True)
-    participants = serializers.ListField(child=UserSerializer(), required=True)
+    admin = UserSerializer(required=True)
     is_private = serializers.BooleanField(required=False, default=False)
