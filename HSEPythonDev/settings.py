@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'HSEPythonDev.src.core.apps.CoreConfig' add when it is time to add db
 ]
 
 MIDDLEWARE = [
