@@ -16,10 +16,13 @@ Including another URLconf
 from django.urls import re_path, include
 from rest_framework.routers import SimpleRouter
 
-from HSEPythonDev.src.core.views import HelloWorldViewSet
+from HSEPythonDev.src.core.views import HelloWorldViewSet, MeetingsViewSet
 hello_world_router = SimpleRouter()
 hello_world_router.register('hello', HelloWorldViewSet, basename='hello')
 
+meetingsRouter = SimpleRouter()
+meetingsRouter.register('meetings', MeetingsViewSet, basename='meetings')
 urlpatterns = [
-    re_path(r'test/', include(hello_world_router.urls))
+    re_path(r'test/', include(hello_world_router.urls)),
+    re_path(r'', include(meetingsRouter.urls))
 ]
