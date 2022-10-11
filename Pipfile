@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
+djangogrpcframework = "*"
+grpcio = "*"
+grpcio-tools = "*"
+grpcio-testing = "*"
 
 [dev-packages]
 flake8 = "*"
